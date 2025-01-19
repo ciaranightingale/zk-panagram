@@ -1,3 +1,3 @@
-fn main(answer: str<9>, guess: str<9>) {
-    assert(answer == guess);
+fn main(guess: str<9>) {
+    assert("outnumber" == guess);
 }
