@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "blakejs": "^1.2.1",
+    "elliptic": "^6.6.1"
+  }
+}

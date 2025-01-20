@@ -11,15 +11,16 @@ contract PanagramGame is ERC1155, Ownable {
 
     // Tracking if a round is active
     bool public isRoundActive;
-    
+
     // Keep track of the winner of the current round
     address public currentRoundWinner;
-    
+
     // Mapping to track number of wins for each address
     mapping(address => uint256) public winnerWins;
 
     // To track if the first winner has already been minted an NFT in this round
     bool public firstWinnerMinted;
+    bytes public answer = hex"6cc38c64ff58883dc5c30197e60cecdb104addb4d158e307e992e6491e64fb1c";
 
     // Events
     event RoundStarted();
@@ -31,15 +32,20 @@ contract PanagramGame is ERC1155, Ownable {
     error RoundNotActive();
     error RoundAlreadyEnded();
 
-    constructor(UltraVerifier _verifier) ERC1155("https://api.example.com/metadata/{id}.json") {
+    constructor(UltraVerifier _verifier) ERC1155("") Ownable(msg.sender) {
         verifier = _verifier;
         isRoundActive = false;
         firstWinnerMinted = false;
     }
 
+    function _commitToAnswer(bytes32 commitment) internal {
+        answer = commitment;
+    }
+
     // Only the owner can start and end the round
-    function startRound() external onlyOwner {
+    function startRound(bytes32 commitment) external onlyOwner {
         require(!isRoundActive, "A round is already active.");
+        _commitToAnswer(commitment);
         isRoundActive = true;
         firstWinnerMinted = false;
         currentRoundWinner = address(0);
@@ -59,8 +65,10 @@ contract PanagramGame is ERC1155, Ownable {
         if (!isRoundActive) {
             revert RoundNotActive();
         }
-
-        bool proofResult = verifier.verify(proof, new bytes32       if (!proofResult) {
+        bytes32[] memory inputs = new bytes32[](1);
+        inputs[0] = answer;
+        bool proofResult = verifier.verify(proof, inputs);
+        if (!proofResult) {
             revert IncorrectGuess();
         }
 
@@ -68,18 +76,16 @@ contract PanagramGame is ERC1155, Ownable {
         if (!firstWinnerMinted) {
             firstWinnerMinted = true;
             currentRoundWinner = msg.sender;
-            winnerWins[msg.sender]++;  // Increment wins for the first winner
-            _mint(msg.sender, 1, 1, "");  // Mint NFT with ID 1
+            winnerWins[msg.sender]++; // Increment wins for the first winner
+            _mint(msg.sender, 1, 1, ""); // Mint NFT with ID 1
             emit NFTMinted(msg.sender, 1);
         } else {
             // If someone is the second or further correct guesser, mint NFT with id 2
             if (msg.sender != currentRoundWinner) {
-                _mint(msg.sender, 2, 1, "");  // Mint NFT with ID 2
-                winnerWins[msg.sender]++;  // Increment wins for subsequent winners
+                _mint(msg.sender, 2, 1, ""); // Mint NFT with ID 2
                 emit NFTMinted(msg.sender, 2);
             }
         }
-
         return proofResult;
     }
 

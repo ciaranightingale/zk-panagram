@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import PanagramImage from "./PanagramImage";
+// import generateCommitment from "./generateCommitment.js";
+
 import { compile, createFileManager } from "@noir-lang/noir_wasm";
 import main from "main.nr?url";
 import nargoToml from "Nargo.toml?url";
@@ -36,14 +38,16 @@ function PanagramInput() {
     setResults(""); // Clear results when resubmitting
 
     try {
+      const answer = "6cc38c64ff58883dc5c30197e60cecdb104addb4d158e307e992e6491e64fb1c";
       const { program } = await getCircuit();
       const noir = new Noir(program);
       const backend = new UltraHonkBackend(program.bytecode);
       const guess = document.getElementById("guess").value;
+      // const guess = generateCommitment(guessRaw);
       console.log(guess);
 
       showLog("Generating witness... ⏳");
-      const { witness } = await noir.execute({ guess });
+      const { witness } = await noir.execute({ guess, answer });
       showLog("Generated witness... ✅");
 
       showLog("Generating proof... ⏳");
@@ -52,6 +56,9 @@ function PanagramInput() {
 
       console.log("results", proof.proof);
       showLog('Verifying proof... ⌛');
+      // Verify the proof on-chain instead
+      // we will need to use Wagmi to call the smart contract though
+      // also, we will need to create the commitment using the commitment script
       const isValid = await backend.verifyProof(proof);
       setResults(`Proof is ${isValid ? "valid" : "invalid"}... ✅`);
     } catch (error) {
