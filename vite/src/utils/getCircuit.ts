@@ -1,6 +1,6 @@
 import { compile, createFileManager } from "@noir-lang/noir_wasm";
-import main from "../../circuits/src/main.nr?url";
-import nargoToml from "../../circuits/Nargo.toml?url";
+import main from "../../../circuits/src/main.nr?url";
+import nargoToml from "../../../circuits/Nargo.toml?url";
 
 import initNoirC from "@noir-lang/noirc_abi";
 import initACVM from "@noir-lang/acvm_js";

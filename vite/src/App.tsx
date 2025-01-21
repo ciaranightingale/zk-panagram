@@ -1,9 +1,7 @@
 import { WagmiProvider, useAccount } from 'wagmi'
 import { config } from './config'
-import { Account } from './account'
-import { WalletOptions } from './wallet-options'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import PanagramInput from './PanagramInput'
+import PanagramInput from './components/PanagramInput'
 
 import './App.css'
 

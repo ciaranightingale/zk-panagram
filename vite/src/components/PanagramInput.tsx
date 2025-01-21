@@ -1,16 +1,18 @@
 import { useState } from 'react';
-import PanagramImage from "./PanagramImage";
+import PanagramImage from "./PanagramImage.tsx";
 import { useAccount } from 'wagmi';
 
 import { UltraHonkBackend } from '@aztec/bb.js';
 import { Noir } from '@noir-lang/noir_js';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import {abi} from './abi/abi.ts';
-import ConnectWallet from './ConnectWallet';
-import { getCircuit } from './getCircuit';
+import {abi} from '../abi/abi.ts';
+import ConnectWallet from './ConnectWallet.tsx';
+import { getCircuit } from '../utils/getCircuit.ts';
+import createPedersenHash from '../utils/computeHash.ts';
+import { hash } from 'crypto';
 
 function PanagramInput() {
-  const {data: isValid, isPending, writeContract} = useWriteContract();
+  // const {data: isValid, isPending, writeContract} = useWriteContract();
   const [logs, setLogs] = useState<string[]>([]);
   const [results, setResults] = useState("");
 
@@ -27,11 +29,13 @@ function PanagramInput() {
       const { program } = await getCircuit();
       const noir = new Noir(program);
       const backend = new UltraHonkBackend(program.bytecode);
-      const guess = (document.getElementById("guess") as HTMLInputElement).value;
+      const guessRaw = (document.getElementById("guess") as HTMLInputElement).value;
+      const guess = await createPedersenHash([guessRaw]);
+      const answer = "0x2df8b940e5890e4e1377e05373fae69a1d754f6935e6a780b666947431f2cdcd";
       console.log(guess);
-
+      console.log(answer);
       showLog("Generating witness... ⏳");
-      const { witness } = await noir.execute({ guess });
+      const { witness } = await noir.execute({ guess, expected_hash: answer });
       showLog("Generated witness... ✅");
 
       showLog("Generating proof... ⏳");
@@ -40,25 +44,27 @@ function PanagramInput() {
 
       console.log("results", proof.proof);
       showLog('Verifying proof... ⌛');
-      // const isValid = await backend.verifyProof(proof);
-      writeContract({
-        address: '0x',
-        abi,
-        functionName: 'makeGuess',
-        args: [guess]
-      });
-      const { isLoading, isSuccess: isConfirmed } =
-        useWaitForTransactionReceipt({
-          hash: isValid,
-        })
-        if (isConfirmed) {
-          setResults(`Proof is ${isValid ? "valid" : "invalid"}... ✅`);
-        } else {
-          showLog("Waiting for verification... ⏳");
-        }
+      const isValid = await backend.verifyProof(proof);
+      // writeContract({
+      //   address: '0x',
+      //   abi,
+      //   functionName: 'makeGuess',
+      //   args: [guess]
+      // });
+      // const { isLoading, isSuccess: isConfirmed } =
+      //   useWaitForTransactionReceipt({
+      //     hash: isValid,
+      //   })
+      //   if (isConfirmed) {
+      //     setResults(`Proof is ${isValid ? "valid" : "invalid"}... ✅`);
+      //   } else {
+      //     showLog("Waiting for verification... ⏳");
+      //   }
+        setResults(`Proof is ${isValid ? "valid" : "invalid"}... ✅`);
       
     } catch (error: unknown) {
       showLog("Oh 💔");
+      console.error(error);
     }
   };
 
