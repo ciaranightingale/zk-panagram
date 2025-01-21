@@ -20,7 +20,7 @@ contract PanagramGame is ERC1155, Ownable {
 
     // To track if the first winner has already been minted an NFT in this round
     bool public firstWinnerMinted;
-    bytes32 public answer = hex"6cc38c64ff58883dc5c30197e60cecdb104addb4d158e307e992e6491e64fb1c";
+    // bytes32 public answer = hex"6cc38c64ff58883dc5c30197e60cecdb104addb4d158e307e992e6491e64fb1c";
 
     // Events
     event RoundStarted();
@@ -38,14 +38,9 @@ contract PanagramGame is ERC1155, Ownable {
         firstWinnerMinted = false;
     }
 
-    function _commitToAnswer(bytes32 commitment) internal {
-        answer = commitment;
-    }
-
     // Only the owner can start and end the round
-    function startRound(bytes32 commitment) external onlyOwner {
+    function startRound() external onlyOwner {
         require(!isRoundActive, "A round is already active.");
-        _commitToAnswer(commitment);
         isRoundActive = true;
         firstWinnerMinted = false;
         currentRoundWinner = address(0);
@@ -65,8 +60,7 @@ contract PanagramGame is ERC1155, Ownable {
         if (!isRoundActive) {
             revert RoundNotActive();
         }
-        bytes32[] memory inputs = new bytes32[](1);
-        inputs[0] = answer;
+        bytes32[] memory inputs = new bytes32[](0);
         bool proofResult = verifier.verify(proof, inputs);
         if (!proofResult) {
             revert IncorrectGuess();

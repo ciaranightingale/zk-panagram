@@ -10,9 +10,10 @@ import ConnectWallet from './ConnectWallet.tsx';
 import { getCircuit } from '../utils/getCircuit.ts';
 import createPedersenHash from '../utils/computeHash.ts';
 import { hash } from 'crypto';
+import { hexlify } from 'ethers';
 
 function PanagramInput() {
-  // const {data: isValid, isPending, writeContract} = useWriteContract();
+  const { data, isPending, writeContract } = useWriteContract();
   const [logs, setLogs] = useState<string[]>([]);
   const [results, setResults] = useState("");
 
@@ -44,24 +45,22 @@ function PanagramInput() {
 
       console.log("results", proof.proof);
       showLog('Verifying proof... ⌛');
-      const isValid = await backend.verifyProof(proof);
-      // writeContract({
-      //   address: '0x',
-      //   abi,
-      //   functionName: 'makeGuess',
-      //   args: [guess]
-      // });
-      // const { isLoading, isSuccess: isConfirmed } =
-      //   useWaitForTransactionReceipt({
-      //     hash: isValid,
-      //   })
-      //   if (isConfirmed) {
-      //     setResults(`Proof is ${isValid ? "valid" : "invalid"}... ✅`);
-      //   } else {
-      //     showLog("Waiting for verification... ⏳");
-      //   }
-        setResults(`Proof is ${isValid ? "valid" : "invalid"}... ✅`);
-      
+      // const isValid = await backend.verifyProof(proof);
+      const proofHex = hexlify(proof.proof) as `0x${string}`; // Assert the type
+      console.log("proofHex", proofHex);
+      const tx = await writeContract({
+        address: '0x056b597b91f6f128a999B8F6d5acE149a35E2F7A',
+        abi,
+        functionName: 'verifyEqual',
+        args: [proofHex]
+      });
+      if(data) {
+        const { isLoading: isConfirming, isSuccess: isConfirmed } =
+        useWaitForTransactionReceipt({
+          hash: data,
+        });
+        (isConfirming) ? showLog('Waiting for verification') : showLog('Proof verified ✅');
+      }
     } catch (error: unknown) {
       showLog("Oh 💔");
       console.error(error);
