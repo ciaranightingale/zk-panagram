@@ -4,7 +4,7 @@ pragma solidity ^0.8.24;
 // Import ERC1155 contract (NFT)
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "../../circuits/target/contract.sol";
+import {UltraVerifier} from "./UltraVerifier.sol";
 
 contract PanagramGame is ERC1155, Ownable {
     UltraVerifier public verifier;
@@ -20,7 +20,7 @@ contract PanagramGame is ERC1155, Ownable {
 
     // To track if the first winner has already been minted an NFT in this round
     bool public firstWinnerMinted;
-    bytes public answer = hex"6cc38c64ff58883dc5c30197e60cecdb104addb4d158e307e992e6491e64fb1c";
+    bytes32 public answer = hex"6cc38c64ff58883dc5c30197e60cecdb104addb4d158e307e992e6491e64fb1c";
 
     // Events
     event RoundStarted();
