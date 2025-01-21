@@ -1,8 +1,6 @@
 import { useState } from 'react';
 import PanagramImage from "./PanagramImage";
 import { useAccount } from 'wagmi';
-import { Account } from './account'
-import { WalletOptions } from './wallet-options'
 import { compile, createFileManager } from "@noir-lang/noir_wasm";
 import main from "../../circuits/src/main.nr?url";
 import nargoToml from "../../circuits/Nargo.toml?url";
@@ -14,18 +12,11 @@ import acvm from "@noir-lang/acvm_js/web/acvm_js_bg.wasm?url";
 import noirc from "@noir-lang/noirc_abi/web/noirc_abi_wasm_bg.wasm?url";
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import {abi} from './abi/abi.ts';
+import ConnectWallet from './ConnectWallet';
 
 await Promise.all([initACVM(fetch(acvm)), initNoirC(fetch(noirc))]);
 
-function ConnectWallet() {
-  const { isConnected } = useAccount();
 
-  if (isConnected) {
-    return <Account />;
-  }
-
-  return <WalletOptions />;
-}
 
 export async function getCircuit() {
   const fm = createFileManager("/");
