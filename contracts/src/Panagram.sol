@@ -5,8 +5,9 @@ pragma solidity ^0.8.24;
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import {UltraVerifier} from "./UltraVerifier.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
-contract PanagramGame is ERC1155, Ownable {
+contract Panagram is ERC1155, Ownable {
     UltraVerifier public verifier;
 
     // Tracking if a round is active
@@ -27,15 +28,34 @@ contract PanagramGame is ERC1155, Ownable {
     event RoundEnded(address winner);
     event NFTMinted(address winner, uint256 tokenId);
     event VerifierUpdated(UltraVerifier verifier);
+    event ProofSucceeded(bool result);
 
     error IncorrectGuess();
     error RoundNotActive();
     error RoundAlreadyEnded();
 
-    constructor(UltraVerifier _verifier) ERC1155("") Ownable(msg.sender) {
+    constructor(UltraVerifier _verifier)
+        ERC1155("https://ipfs.io/ipfs/bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/{id}.json")
+        Ownable(msg.sender)
+    {
         verifier = _verifier;
         isRoundActive = false;
         firstWinnerMinted = false;
+    }
+
+    // Override the uri function to provide token-specific metadata
+    function uri(uint256 _id) public view override returns (string memory) {
+        return string(
+            abi.encodePacked(
+                "https://ipfs.io/ipfs/bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/",
+                Strings.toString(_id),
+                ".json"
+            )
+        );
+    }
+
+    function contractURI() public pure returns (string memory) {
+        return "https://ipfs.io/ipfs/bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/collection.json";
     }
 
     // Only the owner can start and end the round
@@ -62,6 +82,7 @@ contract PanagramGame is ERC1155, Ownable {
         }
         bytes32[] memory inputs = new bytes32[](0);
         bool proofResult = verifier.verify(proof, inputs);
+        emit ProofSucceeded(proofResult);
         if (!proofResult) {
             revert IncorrectGuess();
         }
@@ -71,13 +92,13 @@ contract PanagramGame is ERC1155, Ownable {
             firstWinnerMinted = true;
             currentRoundWinner = msg.sender;
             winnerWins[msg.sender]++; // Increment wins for the first winner
-            _mint(msg.sender, 1, 1, ""); // Mint NFT with ID 1
-            emit NFTMinted(msg.sender, 1);
+            _mint(msg.sender, 0, 1, ""); // Mint NFT with ID 0
+            emit NFTMinted(msg.sender, 0);
         } else {
             // If someone is the second or further correct guesser, mint NFT with id 2
             if (msg.sender != currentRoundWinner) {
-                _mint(msg.sender, 2, 1, ""); // Mint NFT with ID 2
-                emit NFTMinted(msg.sender, 2);
+                _mint(msg.sender, 1, 1, ""); // Mint NFT with ID 1
+                emit NFTMinted(msg.sender, 1);
             }
         }
         return proofResult;

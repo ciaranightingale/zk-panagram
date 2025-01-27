@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import PanagramImage from "./PanagramImage.tsx";
-import { useAccount } from 'wagmi';
+import { bytesToHex } from 'viem';
 
-import { UltraHonkBackend } from '@aztec/bb.js';
+import { UltraHonkBackend, splitHonkProof } from '@aztec/bb.js';
 import { Noir } from '@noir-lang/noir_js';
-import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
 import {abi} from '../abi/abi.ts';
 import ConnectWallet from './ConnectWallet.tsx';
 import { getCircuit } from '../utils/getCircuit.ts';
@@ -12,8 +12,14 @@ import createPedersenHash from '../utils/computeHash.ts';
 import { hash } from 'crypto';
 import { hexlify } from 'ethers';
 
+function uint8ArrayToHex(uint8Array: Uint8Array): string {
+  return Array.from(uint8Array)
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join("");
+}
+
 function PanagramInput() {
-  const { data, isPending, writeContract } = useWriteContract();
+  const { data, isPending, writeContract, isSuccess } = useWriteContract();
   const [logs, setLogs] = useState<string[]>([]);
   const [results, setResults] = useState("");
 
@@ -32,13 +38,12 @@ function PanagramInput() {
       const backend = new UltraHonkBackend(program.bytecode);
       const guessRaw = (document.getElementById("guess") as HTMLInputElement).value;
       const guess = await createPedersenHash([guessRaw]);
+      console.log("guess", guess);
       const answer = "0x2df8b940e5890e4e1377e05373fae69a1d754f6935e6a780b666947431f2cdcd";
-      console.log(guess);
-      console.log(answer);
       showLog("Generating witness... ⏳");
-      const { witness } = await noir.execute({ guess, expected_hash: answer });
+      const { witness } = await noir.execute({ guess: guess, expected_hash: answer });
       showLog("Generated witness... ✅");
-
+ 
       showLog("Generating proof... ⏳");
       const proof = await backend.generateProof(witness);
       showLog("Generated proof... ✅");
@@ -46,20 +51,18 @@ function PanagramInput() {
       console.log("results", proof.proof);
       showLog('Verifying proof... ⌛');
       // const isValid = await backend.verifyProof(proof);
-      const proofHex = hexlify(proof.proof) as `0x${string}`; // Assert the type
+      // const { proof: proofWithoutPublicInputs, publicInputs } = splitHonkProof(proof.proof);
+      const proofHex = bytesToHex(proof.proof)
       console.log("proofHex", proofHex);
-      const tx = await writeContract({
+      writeContract({
         address: '0x056b597b91f6f128a999B8F6d5acE149a35E2F7A',
-        abi,
+        abi: abi,
         functionName: 'verifyEqual',
-        args: [proofHex]
+        args: [proofHex],
       });
-      if(data) {
-        const { isLoading: isConfirming, isSuccess: isConfirmed } =
-        useWaitForTransactionReceipt({
-          hash: data,
-        });
-        (isConfirming) ? showLog('Waiting for verification') : showLog('Proof verified ✅');
+      console.log("data", data);
+      if (isSuccess) {
+        data ? showLog('Proof verified... ✅') : showLog('Proof verification failed... ❌');
       }
     } catch (error: unknown) {
       showLog("Oh 💔");

@@ -1,3 +1,3 @@
-fn main(guess: str<66>, expected_hash: str<66>) {
+fn main(guess: Field, expected_hash: Field) {
     assert_eq(guess, expected_hash);
 }
