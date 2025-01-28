@@ -7,6 +7,8 @@ import initACVM from "@noir-lang/acvm_js";
 import acvm from "@noir-lang/acvm_js/web/acvm_js_bg.wasm?url";
 import noirc from "@noir-lang/noirc_abi/web/noirc_abi_wasm_bg.wasm?url";
 
+import { CompiledCircuit } from '@noir-lang/types';
+
 await Promise.all([initACVM(fetch(acvm)), initNoirC(fetch(noirc))]);
 
 export async function getCircuit() {
@@ -23,6 +25,9 @@ export async function getCircuit() {
   
     fm.writeFile("./src/main.nr", mainBody);
     fm.writeFile("./Nargo.toml", nargoTomlBody);
-  
-    return await compile(fm);
+    const result = await compile(fm);
+    if (!('program' in result)) {
+      throw new Error('Compilation failed');
+    }
+    return result.program as CompiledCircuit;
   }

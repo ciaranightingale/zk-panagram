@@ -1,22 +1,14 @@
 import { useState } from 'react';
 import PanagramImage from "./PanagramImage.tsx";
-import { bytesToHex } from 'viem';
 
 import { UltraHonkBackend, splitHonkProof } from '@aztec/bb.js';
-import { Noir } from '@noir-lang/noir_js';
+import { CompiledCircuit, Noir } from '@noir-lang/noir_js';
 import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
 import {abi} from '../abi/abi.ts';
 import ConnectWallet from './ConnectWallet.tsx';
 import { getCircuit } from '../utils/getCircuit.ts';
 import createPedersenHash from '../utils/computeHash.ts';
-import { hash } from 'crypto';
-import { hexlify } from 'ethers';
-
-function uint8ArrayToHex(uint8Array: Uint8Array): string {
-  return Array.from(uint8Array)
-    .map((byte) => byte.toString(16).padStart(2, "0"))
-    .join("");
-}
+import { uint8ArrayToHex } from '../utils/splitProof.ts';
 
 function PanagramInput() {
   const { data, isPending, writeContract, isSuccess } = useWriteContract();
@@ -33,7 +25,8 @@ function PanagramInput() {
     setResults("");
 
     try {
-      const { program } = await getCircuit();
+      const program = await getCircuit();
+      //const circuit = (await fetch("../../../circuits/target/panagram.json")).body;
       const noir = new Noir(program);
       const backend = new UltraHonkBackend(program.bytecode);
       const guessRaw = (document.getElementById("guess") as HTMLInputElement).value;
@@ -45,25 +38,24 @@ function PanagramInput() {
       showLog("Generated witness... ✅");
  
       showLog("Generating proof... ⏳");
-      const proof = await backend.generateProof(witness);
+      const proofRaw = await backend.generateProof(witness, {keccak: true});
       showLog("Generated proof... ✅");
-
-      console.log("results", proof.proof);
       showLog('Verifying proof... ⌛');
-      // const isValid = await backend.verifyProof(proof);
-      // const { proof: proofWithoutPublicInputs, publicInputs } = splitHonkProof(proof.proof);
-      const proofHex = bytesToHex(proof.proof)
-      console.log("proofHex", proofHex);
+
+      const { publicInputs: inputs, proof: proof } = splitHonkProof(proofRaw.proof);
+      const isValid = await backend.verifyProof(proofRaw);
+      
+      console.log("proof", proof);
+      // const proofHex = splitProof(proof.proof);
+      console.log("proofHex", uint8ArrayToHex(proof));
       writeContract({
-        address: '0x056b597b91f6f128a999B8F6d5acE149a35E2F7A',
+        address: '0xeDd2816DE7c4D5EE567bcafE206cebB19d901Fa8',
         abi: abi,
         functionName: 'verifyEqual',
-        args: [proofHex],
+        args: [uint8ArrayToHex(proof)],
       });
-      console.log("data", data);
-      if (isSuccess) {
-        data ? showLog('Proof verified... ✅') : showLog('Proof verification failed... ❌');
-      }
+      // console.log("data", data);
+      isValid ? showLog('Proof verified... ✅') : showLog('Proof verification failed... ❌');
     } catch (error: unknown) {
       showLog("Oh 💔");
       console.error(error);

@@ -4,11 +4,11 @@ pragma solidity ^0.8.24;
 // Import ERC1155 contract (NFT)
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import {UltraVerifier} from "./UltraVerifier.sol";
+import {IVerifier} from "./HonkVerifier.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract Panagram is ERC1155, Ownable {
-    UltraVerifier public verifier;
+    IVerifier public verifier;
 
     // Tracking if a round is active
     bool public isRoundActive;
@@ -27,14 +27,14 @@ contract Panagram is ERC1155, Ownable {
     event RoundStarted();
     event RoundEnded(address winner);
     event NFTMinted(address winner, uint256 tokenId);
-    event VerifierUpdated(UltraVerifier verifier);
+    event VerifierUpdated(IVerifier verifier);
     event ProofSucceeded(bool result);
 
     error IncorrectGuess();
     error RoundNotActive();
     error RoundAlreadyEnded();
 
-    constructor(UltraVerifier _verifier)
+    constructor(IVerifier _verifier)
         ERC1155("https://ipfs.io/ipfs/bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/{id}.json")
         Ownable(msg.sender)
     {
@@ -105,7 +105,7 @@ contract Panagram is ERC1155, Ownable {
     }
 
     // Allow updating the verifier (only the owner)
-    function setVerifier(UltraVerifier _verifier) external onlyOwner {
+    function setVerifier(IVerifier _verifier) external onlyOwner {
         verifier = _verifier;
         emit VerifierUpdated(_verifier);
     }

@@ -1,707 +1,725 @@
 export const abi = [
-        {
-            "type": "constructor",
-            "inputs": [
-                {
-                    "name": "_verifier",
-                    "type": "address",
-                    "internalType": "contract UltraVerifier"
-                }
-            ],
-            "stateMutability": "nonpayable"
-        },
-        {
-            "type": "function",
-            "name": "balanceOf",
-            "inputs": [
-                {
-                    "name": "account",
-                    "type": "address",
-                    "internalType": "address"
-                },
-                {
-                    "name": "id",
-                    "type": "uint256",
-                    "internalType": "uint256"
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "uint256",
-                    "internalType": "uint256"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "function",
-            "name": "balanceOfBatch",
-            "inputs": [
-                {
-                    "name": "accounts",
-                    "type": "address[]",
-                    "internalType": "address[]"
-                },
-                {
-                    "name": "ids",
-                    "type": "uint256[]",
-                    "internalType": "uint256[]"
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "uint256[]",
-                    "internalType": "uint256[]"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "function",
-            "name": "currentRoundWinner",
-            "inputs": [],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "function",
-            "name": "endRound",
-            "inputs": [],
-            "outputs": [],
-            "stateMutability": "nonpayable"
-        },
-        {
-            "type": "function",
-            "name": "firstWinnerMinted",
-            "inputs": [],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "bool",
-                    "internalType": "bool"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "function",
-            "name": "getCurrentRoundStatus",
-            "inputs": [],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "bool",
-                    "internalType": "bool"
-                },
-                {
-                    "name": "",
-                    "type": "address",
-                    "internalType": "address"
-                },
-                {
-                    "name": "",
-                    "type": "bool",
-                    "internalType": "bool"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "function",
-            "name": "isApprovedForAll",
-            "inputs": [
-                {
-                    "name": "account",
-                    "type": "address",
-                    "internalType": "address"
-                },
-                {
-                    "name": "operator",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "bool",
-                    "internalType": "bool"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "function",
-            "name": "isRoundActive",
-            "inputs": [],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "bool",
-                    "internalType": "bool"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "function",
-            "name": "owner",
-            "inputs": [],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "function",
-            "name": "renounceOwnership",
-            "inputs": [],
-            "outputs": [],
-            "stateMutability": "nonpayable"
-        },
-        {
-            "type": "function",
-            "name": "safeBatchTransferFrom",
-            "inputs": [
-                {
-                    "name": "from",
-                    "type": "address",
-                    "internalType": "address"
-                },
-                {
-                    "name": "to",
-                    "type": "address",
-                    "internalType": "address"
-                },
-                {
-                    "name": "ids",
-                    "type": "uint256[]",
-                    "internalType": "uint256[]"
-                },
-                {
-                    "name": "values",
-                    "type": "uint256[]",
-                    "internalType": "uint256[]"
-                },
-                {
-                    "name": "data",
-                    "type": "bytes",
-                    "internalType": "bytes"
-                }
-            ],
-            "outputs": [],
-            "stateMutability": "nonpayable"
-        },
-        {
-            "type": "function",
-            "name": "safeTransferFrom",
-            "inputs": [
-                {
-                    "name": "from",
-                    "type": "address",
-                    "internalType": "address"
-                },
-                {
-                    "name": "to",
-                    "type": "address",
-                    "internalType": "address"
-                },
-                {
-                    "name": "id",
-                    "type": "uint256",
-                    "internalType": "uint256"
-                },
-                {
-                    "name": "value",
-                    "type": "uint256",
-                    "internalType": "uint256"
-                },
-                {
-                    "name": "data",
-                    "type": "bytes",
-                    "internalType": "bytes"
-                }
-            ],
-            "outputs": [],
-            "stateMutability": "nonpayable"
-        },
-        {
-            "type": "function",
-            "name": "setApprovalForAll",
-            "inputs": [
-                {
-                    "name": "operator",
-                    "type": "address",
-                    "internalType": "address"
-                },
-                {
-                    "name": "approved",
-                    "type": "bool",
-                    "internalType": "bool"
-                }
-            ],
-            "outputs": [],
-            "stateMutability": "nonpayable"
-        },
-        {
-            "type": "function",
-            "name": "setVerifier",
-            "inputs": [
-                {
-                    "name": "_verifier",
-                    "type": "address",
-                    "internalType": "contract UltraVerifier"
-                }
-            ],
-            "outputs": [],
-            "stateMutability": "nonpayable"
-        },
-        {
-            "type": "function",
-            "name": "startRound",
-            "inputs": [],
-            "outputs": [],
-            "stateMutability": "nonpayable"
-        },
-        {
-            "type": "function",
-            "name": "supportsInterface",
-            "inputs": [
-                {
-                    "name": "interfaceId",
-                    "type": "bytes4",
-                    "internalType": "bytes4"
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "bool",
-                    "internalType": "bool"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "function",
-            "name": "transferOwnership",
-            "inputs": [
-                {
-                    "name": "newOwner",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ],
-            "outputs": [],
-            "stateMutability": "nonpayable"
-        },
-        {
-            "type": "function",
-            "name": "uri",
-            "inputs": [
-                {
-                    "name": "",
-                    "type": "uint256",
-                    "internalType": "uint256"
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "string",
-                    "internalType": "string"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "function",
-            "name": "verifier",
-            "inputs": [],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "address",
-                    "internalType": "contract UltraVerifier"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "function",
-            "name": "verifyEqual",
-            "inputs": [
-                {
-                    "name": "proof",
-                    "type": "bytes",
-                    "internalType": "bytes"
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "bool",
-                    "internalType": "bool"
-                }
-            ],
-            "stateMutability": "nonpayable"
-        },
-        {
-            "type": "function",
-            "name": "winnerWins",
-            "inputs": [
-                {
-                    "name": "",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ],
-            "outputs": [
-                {
-                    "name": "",
-                    "type": "uint256",
-                    "internalType": "uint256"
-                }
-            ],
-            "stateMutability": "view"
-        },
-        {
-            "type": "event",
-            "name": "ApprovalForAll",
-            "inputs": [
-                {
-                    "name": "account",
-                    "type": "address",
-                    "indexed": true,
-                    "internalType": "address"
-                },
-                {
-                    "name": "operator",
-                    "type": "address",
-                    "indexed": true,
-                    "internalType": "address"
-                },
-                {
-                    "name": "approved",
-                    "type": "bool",
-                    "indexed": false,
-                    "internalType": "bool"
-                }
-            ],
-            "anonymous": false
-        },
-        {
-            "type": "event",
-            "name": "NFTMinted",
-            "inputs": [
-                {
-                    "name": "winner",
-                    "type": "address",
-                    "indexed": false,
-                    "internalType": "address"
-                },
-                {
-                    "name": "tokenId",
-                    "type": "uint256",
-                    "indexed": false,
-                    "internalType": "uint256"
-                }
-            ],
-            "anonymous": false
-        },
-        {
-            "type": "event",
-            "name": "OwnershipTransferred",
-            "inputs": [
-                {
-                    "name": "previousOwner",
-                    "type": "address",
-                    "indexed": true,
-                    "internalType": "address"
-                },
-                {
-                    "name": "newOwner",
-                    "type": "address",
-                    "indexed": true,
-                    "internalType": "address"
-                }
-            ],
-            "anonymous": false
-        },
-        {
-            "type": "event",
-            "name": "RoundEnded",
-            "inputs": [
-                {
-                    "name": "winner",
-                    "type": "address",
-                    "indexed": false,
-                    "internalType": "address"
-                }
-            ],
-            "anonymous": false
-        },
-        {
-            "type": "event",
-            "name": "RoundStarted",
-            "inputs": [],
-            "anonymous": false
-        },
-        {
-            "type": "event",
-            "name": "TransferBatch",
-            "inputs": [
-                {
-                    "name": "operator",
-                    "type": "address",
-                    "indexed": true,
-                    "internalType": "address"
-                },
-                {
-                    "name": "from",
-                    "type": "address",
-                    "indexed": true,
-                    "internalType": "address"
-                },
-                {
-                    "name": "to",
-                    "type": "address",
-                    "indexed": true,
-                    "internalType": "address"
-                },
-                {
-                    "name": "ids",
-                    "type": "uint256[]",
-                    "indexed": false,
-                    "internalType": "uint256[]"
-                },
-                {
-                    "name": "values",
-                    "type": "uint256[]",
-                    "indexed": false,
-                    "internalType": "uint256[]"
-                }
-            ],
-            "anonymous": false
-        },
-        {
-            "type": "event",
-            "name": "TransferSingle",
-            "inputs": [
-                {
-                    "name": "operator",
-                    "type": "address",
-                    "indexed": true,
-                    "internalType": "address"
-                },
-                {
-                    "name": "from",
-                    "type": "address",
-                    "indexed": true,
-                    "internalType": "address"
-                },
-                {
-                    "name": "to",
-                    "type": "address",
-                    "indexed": true,
-                    "internalType": "address"
-                },
-                {
-                    "name": "id",
-                    "type": "uint256",
-                    "indexed": false,
-                    "internalType": "uint256"
-                },
-                {
-                    "name": "value",
-                    "type": "uint256",
-                    "indexed": false,
-                    "internalType": "uint256"
-                }
-            ],
-            "anonymous": false
-        },
-        {
-            "type": "event",
-            "name": "URI",
-            "inputs": [
-                {
-                    "name": "value",
-                    "type": "string",
-                    "indexed": false,
-                    "internalType": "string"
-                },
-                {
-                    "name": "id",
-                    "type": "uint256",
-                    "indexed": true,
-                    "internalType": "uint256"
-                }
-            ],
-            "anonymous": false
-        },
-        {
-            "type": "event",
-            "name": "VerifierUpdated",
-            "inputs": [
-                {
-                    "name": "verifier",
-                    "type": "address",
-                    "indexed": false,
-                    "internalType": "contract UltraVerifier"
-                }
-            ],
-            "anonymous": false
-        },
-        {
-            "type": "error",
-            "name": "ERC1155InsufficientBalance",
-            "inputs": [
-                {
-                    "name": "sender",
-                    "type": "address",
-                    "internalType": "address"
-                },
-                {
-                    "name": "balance",
-                    "type": "uint256",
-                    "internalType": "uint256"
-                },
-                {
-                    "name": "needed",
-                    "type": "uint256",
-                    "internalType": "uint256"
-                },
-                {
-                    "name": "tokenId",
-                    "type": "uint256",
-                    "internalType": "uint256"
-                }
-            ]
-        },
-        {
-            "type": "error",
-            "name": "ERC1155InvalidApprover",
-            "inputs": [
-                {
-                    "name": "approver",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ]
-        },
-        {
-            "type": "error",
-            "name": "ERC1155InvalidArrayLength",
-            "inputs": [
-                {
-                    "name": "idsLength",
-                    "type": "uint256",
-                    "internalType": "uint256"
-                },
-                {
-                    "name": "valuesLength",
-                    "type": "uint256",
-                    "internalType": "uint256"
-                }
-            ]
-        },
-        {
-            "type": "error",
-            "name": "ERC1155InvalidOperator",
-            "inputs": [
-                {
-                    "name": "operator",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ]
-        },
-        {
-            "type": "error",
-            "name": "ERC1155InvalidReceiver",
-            "inputs": [
-                {
-                    "name": "receiver",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ]
-        },
-        {
-            "type": "error",
-            "name": "ERC1155InvalidSender",
-            "inputs": [
-                {
-                    "name": "sender",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ]
-        },
-        {
-            "type": "error",
-            "name": "ERC1155MissingApprovalForAll",
-            "inputs": [
-                {
-                    "name": "operator",
-                    "type": "address",
-                    "internalType": "address"
-                },
-                {
-                    "name": "owner",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ]
-        },
-        {
-            "type": "error",
-            "name": "IncorrectGuess",
-            "inputs": []
-        },
-        {
-            "type": "error",
-            "name": "OwnableInvalidOwner",
-            "inputs": [
-                {
-                    "name": "owner",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ]
-        },
-        {
-            "type": "error",
-            "name": "OwnableUnauthorizedAccount",
-            "inputs": [
-                {
-                    "name": "account",
-                    "type": "address",
-                    "internalType": "address"
-                }
-            ]
-        },
-        {
-            "type": "error",
-            "name": "RoundAlreadyEnded",
-            "inputs": []
-        },
-        {
-            "type": "error",
-            "name": "RoundNotActive",
-            "inputs": []
-        }
-    ] as const
+    {
+        "inputs": [
+            {
+                "internalType": "contract IVerifier",
+                "name": "_verifier",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "constructor"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "balance",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "needed",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256"
+            }
+        ],
+        "type": "error",
+        "name": "ERC1155InsufficientBalance"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "approver",
+                "type": "address"
+            }
+        ],
+        "type": "error",
+        "name": "ERC1155InvalidApprover"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "idsLength",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "valuesLength",
+                "type": "uint256"
+            }
+        ],
+        "type": "error",
+        "name": "ERC1155InvalidArrayLength"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+            }
+        ],
+        "type": "error",
+        "name": "ERC1155InvalidOperator"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "receiver",
+                "type": "address"
+            }
+        ],
+        "type": "error",
+        "name": "ERC1155InvalidReceiver"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "sender",
+                "type": "address"
+            }
+        ],
+        "type": "error",
+        "name": "ERC1155InvalidSender"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            }
+        ],
+        "type": "error",
+        "name": "ERC1155MissingApprovalForAll"
+    },
+    {
+        "inputs": [],
+        "type": "error",
+        "name": "IncorrectGuess"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "owner",
+                "type": "address"
+            }
+        ],
+        "type": "error",
+        "name": "OwnableInvalidOwner"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            }
+        ],
+        "type": "error",
+        "name": "OwnableUnauthorizedAccount"
+    },
+    {
+        "inputs": [],
+        "type": "error",
+        "name": "RoundAlreadyEnded"
+    },
+    {
+        "inputs": [],
+        "type": "error",
+        "name": "RoundNotActive"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address",
+                "indexed": true
+            },
+            {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address",
+                "indexed": true
+            },
+            {
+                "internalType": "bool",
+                "name": "approved",
+                "type": "bool",
+                "indexed": false
+            }
+        ],
+        "type": "event",
+        "name": "ApprovalForAll",
+        "anonymous": false
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "winner",
+                "type": "address",
+                "indexed": false
+            },
+            {
+                "internalType": "uint256",
+                "name": "tokenId",
+                "type": "uint256",
+                "indexed": false
+            }
+        ],
+        "type": "event",
+        "name": "NFTMinted",
+        "anonymous": false
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "previousOwner",
+                "type": "address",
+                "indexed": true
+            },
+            {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address",
+                "indexed": true
+            }
+        ],
+        "type": "event",
+        "name": "OwnershipTransferred",
+        "anonymous": false
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bool",
+                "name": "result",
+                "type": "bool",
+                "indexed": false
+            }
+        ],
+        "type": "event",
+        "name": "ProofSucceeded",
+        "anonymous": false
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "winner",
+                "type": "address",
+                "indexed": false
+            }
+        ],
+        "type": "event",
+        "name": "RoundEnded",
+        "anonymous": false
+    },
+    {
+        "inputs": [],
+        "type": "event",
+        "name": "RoundStarted",
+        "anonymous": false
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address",
+                "indexed": true
+            },
+            {
+                "internalType": "address",
+                "name": "from",
+                "type": "address",
+                "indexed": true
+            },
+            {
+                "internalType": "address",
+                "name": "to",
+                "type": "address",
+                "indexed": true
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "ids",
+                "type": "uint256[]",
+                "indexed": false
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "values",
+                "type": "uint256[]",
+                "indexed": false
+            }
+        ],
+        "type": "event",
+        "name": "TransferBatch",
+        "anonymous": false
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address",
+                "indexed": true
+            },
+            {
+                "internalType": "address",
+                "name": "from",
+                "type": "address",
+                "indexed": true
+            },
+            {
+                "internalType": "address",
+                "name": "to",
+                "type": "address",
+                "indexed": true
+            },
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256",
+                "indexed": false
+            },
+            {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256",
+                "indexed": false
+            }
+        ],
+        "type": "event",
+        "name": "TransferSingle",
+        "anonymous": false
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "string",
+                "name": "value",
+                "type": "string",
+                "indexed": false
+            },
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256",
+                "indexed": true
+            }
+        ],
+        "type": "event",
+        "name": "URI",
+        "anonymous": false
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract IVerifier",
+                "name": "verifier",
+                "type": "address",
+                "indexed": false
+            }
+        ],
+        "type": "event",
+        "name": "VerifierUpdated",
+        "anonymous": false
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "balanceOf",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ]
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address[]",
+                "name": "accounts",
+                "type": "address[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "ids",
+                "type": "uint256[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "balanceOfBatch",
+        "outputs": [
+            {
+                "internalType": "uint256[]",
+                "name": "",
+                "type": "uint256[]"
+            }
+        ]
+    },
+    {
+        "inputs": [],
+        "stateMutability": "pure",
+        "type": "function",
+        "name": "contractURI",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ]
+    },
+    {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "currentRoundWinner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ]
+    },
+    {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "endRound"
+    },
+    {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "firstWinnerMinted",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ]
+    },
+    {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "getCurrentRoundStatus",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            },
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            },
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ]
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "account",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "isApprovedForAll",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ]
+    },
+    {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "isRoundActive",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ]
+    },
+    {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "owner",
+        "outputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ]
+    },
+    {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "renounceOwnership"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "from",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "ids",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "uint256[]",
+                "name": "values",
+                "type": "uint256[]"
+            },
+            {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "safeBatchTransferFrom"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "from",
+                "type": "address"
+            },
+            {
+                "internalType": "address",
+                "name": "to",
+                "type": "address"
+            },
+            {
+                "internalType": "uint256",
+                "name": "id",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "value",
+                "type": "uint256"
+            },
+            {
+                "internalType": "bytes",
+                "name": "data",
+                "type": "bytes"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "safeTransferFrom"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "operator",
+                "type": "address"
+            },
+            {
+                "internalType": "bool",
+                "name": "approved",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "setApprovalForAll"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "contract IVerifier",
+                "name": "_verifier",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "setVerifier"
+    },
+    {
+        "inputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "startRound"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes4",
+                "name": "interfaceId",
+                "type": "bytes4"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "supportsInterface",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ]
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "newOwner",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "transferOwnership"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_id",
+                "type": "uint256"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "uri",
+        "outputs": [
+            {
+                "internalType": "string",
+                "name": "",
+                "type": "string"
+            }
+        ]
+    },
+    {
+        "inputs": [],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "verifier",
+        "outputs": [
+            {
+                "internalType": "contract IVerifier",
+                "name": "",
+                "type": "address"
+            }
+        ]
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "bytes",
+                "name": "proof",
+                "type": "bytes"
+            }
+        ],
+        "stateMutability": "nonpayable",
+        "type": "function",
+        "name": "verifyEqual",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "",
+                "type": "bool"
+            }
+        ]
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "",
+                "type": "address"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function",
+        "name": "winnerWins",
+        "outputs": [
+            {
+                "internalType": "uint256",
+                "name": "",
+                "type": "uint256"
+            }
+        ]
+    }
+] as const
