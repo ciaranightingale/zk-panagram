@@ -44,7 +44,7 @@ contract Panagram is ERC1155, Ownable {
     error Panagram__InvalidTokenId();
 
     constructor(IVerifier _verifier)
-        ERC1155("https://ipfs.io/ipfs/bafybeicfeq3gxatc7os2xbl7eqhmnlvbuwegg4erqhi4ggbl3beaamq5si/{id}.json")
+        ERC1155("ipfs://bafybeicqfc4ipkle34tgqv3gh7gccwhmr22qdg7p6k6oxon255mnwb6csi/{id}.json")
         Ownable(msg.sender)
     {
         verifier = _verifier;
@@ -59,13 +59,13 @@ contract Panagram is ERC1155, Ownable {
     //     }
     //     return string(
     //         abi.encodePacked(
-    //             "ipfs://bafybeicfeq3gxatc7os2xbl7eqhmnlvbuwegg4erqhi4ggbl3beaamq5si/", Strings.toString(_id), ".json"
+    //             "ipfs://bafybeicqfc4ipkle34tgqv3gh7gccwhmr22qdg7p6k6oxon255mnwb6csi/", Strings.toString(_id), ".json"
     //         )
     //     );
     // }
 
     function contractURI() public pure returns (string memory) {
-        return "ipfs://bafybeicfeq3gxatc7os2xbl7eqhmnlvbuwegg4erqhi4ggbl3beaamq5si/collection.json";
+        return "ipfs://bafybeicqfc4ipkle34tgqv3gh7gccwhmr22qdg7p6k6oxon255mnwb6csi/collection.json";
     }
 
     // Only the owner can start and end the round

@@ -1,25 +1,29 @@
-import { useState } from 'react';
+import { useState } from "react";
 import PanagramImage from "./PanagramImage.tsx";
-
-import { UltraHonkBackend, splitHonkProof } from '@aztec/bb.js';
-import { CompiledCircuit, Noir } from '@noir-lang/noir_js';
-import { useWriteContract, useWaitForTransactionReceipt, useAccount } from 'wagmi';
-import {abi} from '../abi/abi.ts';
-import ConnectWallet from './ConnectWallet.tsx';
-import { getCircuit } from '../utils/getCircuit.ts';
-import createPedersenHash from '../utils/computeHash.ts';
-import { uint8ArrayToHex } from '../utils/splitProof.ts';
-import { PANAGRAM_CONTRACT_ADDRESS } from '../constant.ts';
-
-import { GenerateProof } from '../utils/generateProof.ts';
+import { UltraHonkBackend, splitHonkProof } from "@aztec/bb.js";
+import { CompiledCircuit, Noir } from "@noir-lang/noir_js";
+import {
+  useWriteContract,
+  useWaitForTransactionReceipt,
+  useAccount,
+} from "wagmi";
+import { abi } from "../abi/abi.ts";
+import ConnectWallet from "./ConnectWallet.tsx";
+import { getCircuit } from "../utils/getCircuit.ts";
+import createPedersenHash from "../utils/computeHash.ts";
+import { uint8ArrayToHex } from "../utils/splitProof.ts";
+import { PANAGRAM_CONTRACT_ADDRESS } from "../constant.ts";
+import { GenerateProof } from "../utils/generateProof.ts";
+import NFTGalleryContainer from "./NFTGalleryContainer"; // Import the component
 
 function PanagramInput() {
   const { data, isPending, writeContract, isSuccess } = useWriteContract();
   const [logs, setLogs] = useState<string[]>([]);
   const [results, setResults] = useState("");
+  const { isConnected, address: userAddress } = useAccount(); // Get user address
 
   const showLog = (content: string): void => {
-    setLogs(prevLogs => [...prevLogs, content]);
+    setLogs((prevLogs) => [...prevLogs, content]);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -28,40 +32,30 @@ function PanagramInput() {
     setResults("");
 
     try {
-      // const program = await getCircuit();
-      //const circuit = (await fetch("../../../circuits/target/panagram.json")).body;
-      // const noir = new Noir(program);
-      // const backend = new UltraHonkBackend(program.bytecode);
-      const guessRaw = (document.getElementById("guess") as HTMLInputElement).value;
+      const guessRaw = (document.getElementById("guess") as HTMLInputElement)
+        .value;
       const guess = await createPedersenHash([guessRaw]);
       console.log("guess", guess);
-      // const answer = "0x2df8b940e5890e4e1377e05373fae69a1d754f6935e6a780b666947431f2cdcd";
-      // showLog("Generating witness... ⏳");
-      // // const { witness } = await noir.execute({ guess: guess, expected_hash: answer });
-      // showLog("Generated witness... ✅");
-      // showLog("Generating proof... ⏳");  
-      // showLog("Generated proof... ✅");
-      // showLog('Verifying proof... ⌛');
-      // const isValid = await backend.verifyProof(proofRaw);
-      const {cleanProof: proof, publicInputs} = await GenerateProof(guess, showLog);
+
+      const { cleanProof: proof, publicInputs } = await GenerateProof(
+        guess,
+        showLog
+      );
       console.log("proof", proof);
-      // const proofHex = splitProof(proof.proof);
       console.log("proofHex", uint8ArrayToHex(proof));
+
       const isValid = writeContract({
         address: PANAGRAM_CONTRACT_ADDRESS,
         abi: abi,
-        functionName: 'verifyEqual',
+        functionName: "verifyEqual",
         args: [uint8ArrayToHex(proof)],
       });
       console.log("isValid", isValid);
-      // isValid ? showLog('Proof verified... ✅') : showLog('Proof verification failed... ❌');
     } catch (error: unknown) {
       showLog("Oh 💔");
       console.error(error);
     }
   };
-
-  const { isConnected } = useAccount();
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-purple-500 via-pink-500 to-red-500">
@@ -69,6 +63,7 @@ function PanagramInput() {
         <h1 className="text-4xl font-bold text-center text-gray-800 mb-6">
           Panagram
         </h1>
+
         {isConnected && (
           <>
             <div className="w-full flex justify-center mb-6">
@@ -94,16 +89,28 @@ function PanagramInput() {
                 Submit Guess
               </button>
             </form>
+
+            {/* Logs and results */}
             <div id="logs" className="mt-4 text-gray-700">
               {logs.map((log, index) => (
-                <div key={index} className="mb-2">{log}</div>
+                <div key={index} className="mb-2">
+                  {log}
+                </div>
               ))}
             </div>
             <div id="results" className="mt-4 text-gray-700">
               {results && <div className="font-semibold">{results}</div>}
             </div>
+
+            {/* NFT Gallery after submission */}
+            {userAddress ? (
+              <NFTGalleryContainer userAddress={userAddress} />
+            ) : (
+              <p>No address...</p>
+            )}
           </>
         )}
+
         {!isConnected && (
           <div className="w-full flex justify-center mb-6">
             <ConnectWallet />
