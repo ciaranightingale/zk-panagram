@@ -1,4 +1,4 @@
-import { WagmiProvider, useAccount } from "wagmi";
+import { WagmiProvider } from "wagmi";
 import { config } from "./config";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Panagram from "./components/Panagram.tsx";

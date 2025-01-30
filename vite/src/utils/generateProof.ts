@@ -10,10 +10,10 @@ import noirc from "@noir-lang/noirc_abi/web/noirc_abi_wasm_bg.wasm?url";
 
 import { CompiledCircuit } from '@noir-lang/types';
 
-await Promise.all([initACVM(fetch(acvm)), initNoirC(fetch(noirc))]);
 
 export async function GenerateProof(guess: string, showLog:(content: string) => void): Promise<{ cleanProof: Uint8Array, publicInputs: string[] }> {
   try {
+    await Promise.all([initACVM(fetch(acvm)), initNoirC(fetch(noirc))]);
     const noir = new Noir(circuit as CompiledCircuit);
     const honk = new UltraHonkBackend(circuit.bytecode, { threads: 1 });
       
