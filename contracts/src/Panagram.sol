@@ -24,15 +24,17 @@ contract Panagram is ERC1155, Ownable {
     // bytes32 public answer = hex"6cc38c64ff58883dc5c30197e60cecdb104addb4d158e307e992e6491e64fb1c";
 
     // Events
-    event RoundStarted();
-    event RoundEnded(address winner);
-    event NFTMinted(address winner, uint256 tokenId);
-    event VerifierUpdated(IVerifier verifier);
-    event ProofSucceeded(bool result);
+    event Panagram__RoundStarted();
+    event Panagram__RoundEnded(address winner);
+    event Panagram__NFTMinted(address winner, uint256 tokenId);
+    event Panagram__VerifierUpdated(IVerifier verifier);
+    event Panagram__ProofSucceeded(bool result);
 
-    error IncorrectGuess();
-    error RoundNotActive();
-    error RoundAlreadyEnded();
+    error Panagram__IncorrectGuess();
+    error Panagram__RoundNotActive();
+    error Panagram__RoundAlreadyEnded();
+    error Panagram__RoundAlreadyActive();
+    error Panagram__NoRoundWinner();
 
     constructor(IVerifier _verifier)
         ERC1155("https://ipfs.io/ipfs/bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/{id}.json")
@@ -60,45 +62,50 @@ contract Panagram is ERC1155, Ownable {
 
     // Only the owner can start and end the round
     function startRound() external onlyOwner {
-        require(!isRoundActive, "A round is already active.");
+        if (isRoundActive) {
+            revert Panagram__RoundAlreadyActive();
+        }
         isRoundActive = true;
         firstWinnerMinted = false;
         currentRoundWinner = address(0);
-        emit RoundStarted();
+        emit Panagram__RoundStarted();
     }
 
     function endRound() external onlyOwner {
-        require(isRoundActive, "No round is active.");
-        require(currentRoundWinner != address(0), "No winner yet.");
+        if (!isRoundActive) {
+            revert Panagram__RoundNotActive();
+        }
+        if (currentRoundWinner == address(0)) {
+            revert Panagram__NoRoundWinner();
+        }
 
         isRoundActive = false;
-        emit RoundEnded(currentRoundWinner);
+        emit PanaGramRoundEnded(currentRoundWinner);
     }
 
     // Verify the guess and mint NFT if first or subsequent correct guesses
     function verifyEqual(bytes calldata proof) external returns (bool) {
         if (!isRoundActive) {
-            revert RoundNotActive();
+            revert Panagram__RoundNotActive();
         }
         bytes32[] memory inputs = new bytes32[](0);
         bool proofResult = verifier.verify(proof, inputs);
-        emit ProofSucceeded(proofResult);
+        emit Panagram__ProofSucceeded(proofResult);
         if (!proofResult) {
-            revert IncorrectGuess();
+            revert Panagram__IncorrectGuess();
         }
-
         // If this is the first correct guess, mint NFT with id 1
         if (!firstWinnerMinted) {
             firstWinnerMinted = true;
             currentRoundWinner = msg.sender;
             winnerWins[msg.sender]++; // Increment wins for the first winner
             _mint(msg.sender, 0, 1, ""); // Mint NFT with ID 0
-            emit NFTMinted(msg.sender, 0);
+            emit Panagram__NFTMinted(msg.sender, 0);
         } else {
             // If someone is the second or further correct guesser, mint NFT with id 2
             if (msg.sender != currentRoundWinner) {
                 _mint(msg.sender, 1, 1, ""); // Mint NFT with ID 1
-                emit NFTMinted(msg.sender, 1);
+                emit Panagram__NFTMinted(msg.sender, 1);
             }
         }
         return proofResult;
@@ -107,7 +114,7 @@ contract Panagram is ERC1155, Ownable {
     // Allow updating the verifier (only the owner)
     function setVerifier(IVerifier _verifier) external onlyOwner {
         verifier = _verifier;
-        emit VerifierUpdated(_verifier);
+        emit Panagram__VerifierUpdated(_verifier);
     }
 
     // Getter for current round status

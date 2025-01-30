@@ -1,7 +1,7 @@
 import { defineChain } from 'viem'
  
 export const vMainnet = defineChain({
-  id: 1115511,
+  id: 11155,
   name: 'Virtual Ethereum Sepolia',
   nativeCurrency: { name: 'vEther', symbol: 'vETH', decimals: 18 },
   rpcUrls: {

@@ -10,6 +10,8 @@ import { getCircuit } from '../utils/getCircuit.ts';
 import createPedersenHash from '../utils/computeHash.ts';
 import { uint8ArrayToHex } from '../utils/splitProof.ts';
 
+import { GenerateProof } from '../utils/generateProof.ts';
+
 function PanagramInput() {
   const { data, isPending, writeContract, isSuccess } = useWriteContract();
   const [logs, setLogs] = useState<string[]>([]);
@@ -25,37 +27,33 @@ function PanagramInput() {
     setResults("");
 
     try {
-      const program = await getCircuit();
+      // const program = await getCircuit();
       //const circuit = (await fetch("../../../circuits/target/panagram.json")).body;
-      const noir = new Noir(program);
-      const backend = new UltraHonkBackend(program.bytecode);
+      // const noir = new Noir(program);
+      // const backend = new UltraHonkBackend(program.bytecode);
       const guessRaw = (document.getElementById("guess") as HTMLInputElement).value;
       const guess = await createPedersenHash([guessRaw]);
       console.log("guess", guess);
-      const answer = "0x2df8b940e5890e4e1377e05373fae69a1d754f6935e6a780b666947431f2cdcd";
-      showLog("Generating witness... ⏳");
-      const { witness } = await noir.execute({ guess: guess, expected_hash: answer });
-      showLog("Generated witness... ✅");
- 
-      showLog("Generating proof... ⏳");
-      const proofRaw = await backend.generateProof(witness, {keccak: true});
-      showLog("Generated proof... ✅");
-      showLog('Verifying proof... ⌛');
-
-      const { publicInputs: inputs, proof: proof } = splitHonkProof(proofRaw.proof);
-      const isValid = await backend.verifyProof(proofRaw);
-      
+      // const answer = "0x2df8b940e5890e4e1377e05373fae69a1d754f6935e6a780b666947431f2cdcd";
+      // showLog("Generating witness... ⏳");
+      // // const { witness } = await noir.execute({ guess: guess, expected_hash: answer });
+      // showLog("Generated witness... ✅");
+      // showLog("Generating proof... ⏳");  
+      // showLog("Generated proof... ✅");
+      // showLog('Verifying proof... ⌛');
+      // const isValid = await backend.verifyProof(proofRaw);
+      const {cleanProof: proof, publicInputs} = await GenerateProof(guess, showLog);
       console.log("proof", proof);
       // const proofHex = splitProof(proof.proof);
       console.log("proofHex", uint8ArrayToHex(proof));
-      writeContract({
-        address: '0xeDd2816DE7c4D5EE567bcafE206cebB19d901Fa8',
+      const isValid = writeContract({
+        address: '0xeb9f60caF11C34d221914103a386da6b1234895A',
         abi: abi,
         functionName: 'verifyEqual',
         args: [uint8ArrayToHex(proof)],
       });
-      // console.log("data", data);
-      isValid ? showLog('Proof verified... ✅') : showLog('Proof verification failed... ❌');
+      console.log("isValid", isValid);
+      // isValid ? showLog('Proof verified... ✅') : showLog('Proof verification failed... ❌');
     } catch (error: unknown) {
       showLog("Oh 💔");
       console.error(error);

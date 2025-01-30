@@ -2,5 +2,6 @@
 name="panagram"
 type="bin"
 authors = ["ciara"]
+compiler_version = ">=1.0.0"
 
 [dependencies]

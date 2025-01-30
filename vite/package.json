@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@aztec/bb.js": "^0.72.1",
+    "@aztec/bb.js": "^0.67.1",
     "@noir-lang/noir_js": "^1.0.0-beta.1",
     "@noir-lang/noir_wasm": "^1.0.0-beta.1",
     "@tanstack/react-query": "^5.64.2",
