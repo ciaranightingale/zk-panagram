@@ -41,9 +41,10 @@ contract Panagram is ERC1155, Ownable {
     error Panagram__RoundAlreadyActive();
     error Panagram__NoRoundWinner();
     error Panagram__AlreadyAnsweredCorrectly();
+    error Panagram__InvalidTokenId();
 
     constructor(IVerifier _verifier)
-        ERC1155("https://ipfs.io/ipfs/bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/{id}.json")
+        ERC1155("https://ipfs.io/ipfs/bafybeicfeq3gxatc7os2xbl7eqhmnlvbuwegg4erqhi4ggbl3beaamq5si/{id}.json")
         Ownable(msg.sender)
     {
         verifier = _verifier;
@@ -51,17 +52,20 @@ contract Panagram is ERC1155, Ownable {
         firstWinnerMinted = false;
     }
 
-    // Override the uri function to provide token-specific metadata
-    function uri(uint256 _id) public view override returns (string memory) {
-        return string(
-            abi.encodePacked(
-                "ipfs://bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/", Strings.toString(_id), ".json"
-            )
-        );
-    }
+    // // Override the uri function to provide token-specific metadata
+    // function uri(uint256 _id) public view override returns (string memory) {
+    //     if (id > 1) {
+    //         revert Panagram__InvalidTokenId();
+    //     }
+    //     return string(
+    //         abi.encodePacked(
+    //             "ipfs://bafybeicfeq3gxatc7os2xbl7eqhmnlvbuwegg4erqhi4ggbl3beaamq5si/", Strings.toString(_id), ".json"
+    //         )
+    //     );
+    // }
 
     function contractURI() public pure returns (string memory) {
-        return "ipfs://bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/collection.json";
+        return "ipfs://bafybeicfeq3gxatc7os2xbl7eqhmnlvbuwegg4erqhi4ggbl3beaamq5si/collection.json";
     }
 
     // Only the owner can start and end the round
@@ -71,6 +75,7 @@ contract Panagram is ERC1155, Ownable {
         }
         isRoundActive = true;
         firstWinnerMinted = false;
+        currentRound++;
         currentRoundWinner = address(0);
         emit Panagram__RoundStarted();
     }
@@ -84,7 +89,6 @@ contract Panagram is ERC1155, Ownable {
         }
 
         isRoundActive = false;
-        currentRound++;
         emit Panagram__RoundEnded(currentRoundWinner);
     }
 
@@ -94,7 +98,7 @@ contract Panagram is ERC1155, Ownable {
             revert Panagram__RoundNotActive();
         }
         bytes32[] memory inputs = new bytes32[](0);
-        if (lastCorrectGuessRound[msg.sender] >= currentRound) {
+        if (lastCorrectGuessRound[msg.sender] == currentRound) {
             revert Panagram__AlreadyAnsweredCorrectly();
         }
         bool proofResult = verifier.verify(proof, inputs);
@@ -112,10 +116,8 @@ contract Panagram is ERC1155, Ownable {
             emit Panagram__NFTMinted(msg.sender, 0);
         } else {
             // If someone is the second or further correct guesser, mint NFT with id 2
-            if (msg.sender != currentRoundWinner) {
-                _mint(msg.sender, 1, 1, ""); // Mint NFT with ID 1
-                emit Panagram__NFTMinted(msg.sender, 1);
-            }
+            _mint(msg.sender, 1, 1, ""); // Mint NFT with ID 1
+            emit Panagram__NFTMinted(msg.sender, 1);
         }
         return proofResult;
     }

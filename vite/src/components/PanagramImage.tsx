@@ -1,7 +1,7 @@
 import React from 'react';
 
 function PanagramImage() {
-  const word = "outnumber";
+  const word = "tunbrouem";
   
   // Scramble the word (excluding the middle letter)
   const middleIndex = Math.floor(word.length / 2); // Middle letter

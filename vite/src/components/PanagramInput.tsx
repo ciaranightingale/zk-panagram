@@ -9,6 +9,7 @@ import ConnectWallet from './ConnectWallet.tsx';
 import { getCircuit } from '../utils/getCircuit.ts';
 import createPedersenHash from '../utils/computeHash.ts';
 import { uint8ArrayToHex } from '../utils/splitProof.ts';
+import { PANAGRAM_CONTRACT_ADDRESS } from '../constant.ts';
 
 import { GenerateProof } from '../utils/generateProof.ts';
 
@@ -47,7 +48,7 @@ function PanagramInput() {
       // const proofHex = splitProof(proof.proof);
       console.log("proofHex", uint8ArrayToHex(proof));
       const isValid = writeContract({
-        address: '0xeb9f60caF11C34d221914103a386da6b1234895A',
+        address: PANAGRAM_CONTRACT_ADDRESS,
         abi: abi,
         functionName: 'verifyEqual',
         args: [uint8ArrayToHex(proof)],
