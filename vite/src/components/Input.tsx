@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useWriteContract } from "wagmi";
+import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
 import { abi } from "../abi/abi.ts";
 import createPedersenHash from "../utils/computeHash.ts";
 import { uint8ArrayToHex } from "../utils/splitProof.ts";
@@ -7,8 +7,11 @@ import { PANAGRAM_CONTRACT_ADDRESS } from "../constant.ts";
 import { GenerateProof } from "../utils/generateProof.ts";
 
 export default function Input() {
-  const { data, isPending, writeContract, isSuccess, isError } =
-    useWriteContract();
+  const { data: hash, isPending, writeContract, error } = useWriteContract();
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash,
+    });
   const [logs, setLogs] = useState<string[]>([]);
   const [results, setResults] = useState("");
 
@@ -27,52 +30,23 @@ export default function Input() {
       const guess = await createPedersenHash([guessRaw]);
       console.log("guess", guess);
 
-      const { cleanProof: proof, publicInputs } = await GenerateProof(
-        guess,
-        showLog
-      );
+      const { cleanProof: proof } = await GenerateProof(guess, showLog);
       console.log("proof", proof);
       console.log("proofHex", uint8ArrayToHex(proof));
 
-      // Show waiting state
-      showLog("Waiting for transaction to process... ⏳");
-
       // Send transaction and get transaction hash
-      const tx = await writeContract({
+      await writeContract({
         address: PANAGRAM_CONTRACT_ADDRESS,
         abi: abi,
         functionName: "verifyEqual",
         args: [uint8ArrayToHex(proof)],
       });
-
-      if (tx && tx.hash) {
-        showLog("Transaction in progress... ⏳");
-
-        // Wait for the transaction to be mined and check the status
-        const receipt = await tx.wait();
-
-        // If transaction is successful (status 1)
-        if (receipt.status === 1) {
-          showLog("You got it right! ✅");
-          setResults("Transaction succeeded!");
-        } else {
-          // If the transaction failed (status 0)
-          showLog("Oh no! You got it wrong 💔");
-          setResults("Transaction failed.");
-        }
-      }
     } catch (error: unknown) {
       // Catch and log any other errors
       console.error(error);
 
       // Show log that something went wrong
       showLog("Error submitting transaction 💔");
-
-      if (error instanceof Error) {
-        showLog(`Error: ${error.message}`);
-      } else {
-        showLog("Something went wrong, please try again.");
-      }
     }
   };
 
@@ -82,11 +56,19 @@ export default function Input() {
       showLog("Transaction is processing... ⏳");
     }
 
-    if (isError) {
+    if (error) {
       showLog("Oh no! Something went wrong. 😞");
       setResults("Transaction failed.");
     }
-  }, [isPending, isError]);
+    if (isConfirming) {
+      showLog("Transaction in progress... ⏳");
+    }
+    // If transaction is successful (status 1)
+    if (isConfirmed) {
+      showLog("You got it right! ✅");
+      setResults("Transaction succeeded!");
+    }
+  }, [isPending, error, isConfirming, isConfirmed]);
 
   return (
     <div>

@@ -1,11 +1,9 @@
-import React from 'react';
-
 function PanagramImage() {
   const word = "tunbrouem";
-  
+
   // Scramble the word (excluding the middle letter)
   const middleIndex = Math.floor(word.length / 2); // Middle letter
-  const letters = word.split('');
+  const letters = word.split("");
   const middleLetter = letters[middleIndex]; // Store the middle letter
   letters.splice(middleIndex, 1); // Remove the middle letter
   const scrambledLetters = letters.sort(() => Math.random() - 0.5); // Shuffle the remaining letters
@@ -26,7 +24,9 @@ function PanagramImage() {
         {/* Render the surrounding scrambled letters in a circular layout */}
         {scrambledLetters.map((letter, index) => {
           if (index === middleIndex) return null; // Skip the middle letter as it is already rendered
-          const angle = (360 / (scrambledLetters.length - 1)) * (index < middleIndex ? index : index - 1);
+          const angle =
+            (360 / (scrambledLetters.length - 1)) *
+            (index < middleIndex ? index : index - 1);
           const x = 50 + 35 * Math.cos((angle * Math.PI) / 180); // X position for circle
           const y = 50 + 35 * Math.sin((angle * Math.PI) / 180); // Y position for circle
 

@@ -1,8 +1,7 @@
-import * as React from 'react'
-import { Connector, useConnect } from 'wagmi'
+import { useConnect } from "wagmi";
 
 export function WalletOptions() {
-  const { connectors, connect } = useConnect()
+  const { connectors, connect } = useConnect();
 
   return (
     <div className="flex flex-col space-y-4">
@@ -16,5 +15,5 @@ export function WalletOptions() {
         </button>
       ))}
     </div>
-  )
+  );
 }

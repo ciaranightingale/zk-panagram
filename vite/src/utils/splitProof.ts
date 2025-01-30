@@ -1,4 +1,3 @@
-import { splitHonkProof } from '@aztec/bb.js';
 import { bytesToHex } from 'viem';
   
   

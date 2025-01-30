@@ -1,5 +1,5 @@
 import { UltraHonkBackend } from "@aztec/bb.js";
-import circuit from "../../../circuits/target/panagram.json";
+import circuit from "../../circuits/target/panagram.json";
 // @ts-ignore
 import { Noir } from "@noir-lang/noir_js";
 
