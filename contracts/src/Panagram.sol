@@ -13,11 +13,16 @@ contract Panagram is ERC1155, Ownable {
     // Tracking if a round is active
     bool public isRoundActive;
 
+    uint256 public currentRound;
+
     // Keep track of the winner of the current round
     address public currentRoundWinner;
 
     // Mapping to track number of wins for each address
     mapping(address => uint256) public winnerWins;
+
+    // Track which round a user last guessed correctly
+    mapping(address => uint256) public lastCorrectGuessRound;
 
     // To track if the first winner has already been minted an NFT in this round
     bool public firstWinnerMinted;
@@ -35,6 +40,7 @@ contract Panagram is ERC1155, Ownable {
     error Panagram__RoundAlreadyEnded();
     error Panagram__RoundAlreadyActive();
     error Panagram__NoRoundWinner();
+    error Panagram__AlreadyAnsweredCorrectly();
 
     constructor(IVerifier _verifier)
         ERC1155("https://ipfs.io/ipfs/bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/{id}.json")
@@ -49,15 +55,13 @@ contract Panagram is ERC1155, Ownable {
     function uri(uint256 _id) public view override returns (string memory) {
         return string(
             abi.encodePacked(
-                "https://ipfs.io/ipfs/bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/",
-                Strings.toString(_id),
-                ".json"
+                "ipfs://bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/", Strings.toString(_id), ".json"
             )
         );
     }
 
     function contractURI() public pure returns (string memory) {
-        return "https://ipfs.io/ipfs/bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/collection.json";
+        return "ipfs://bafybeidopttqwsogbmefsajlpziuoqvcnn7h2xf3hh36e5eirmr73uij5y/collection.json";
     }
 
     // Only the owner can start and end the round
@@ -80,7 +84,8 @@ contract Panagram is ERC1155, Ownable {
         }
 
         isRoundActive = false;
-        emit PanaGramRoundEnded(currentRoundWinner);
+        currentRound++;
+        emit Panagram__RoundEnded(currentRoundWinner);
     }
 
     // Verify the guess and mint NFT if first or subsequent correct guesses
@@ -89,11 +94,15 @@ contract Panagram is ERC1155, Ownable {
             revert Panagram__RoundNotActive();
         }
         bytes32[] memory inputs = new bytes32[](0);
+        if (lastCorrectGuessRound[msg.sender] >= currentRound) {
+            revert Panagram__AlreadyAnsweredCorrectly();
+        }
         bool proofResult = verifier.verify(proof, inputs);
         emit Panagram__ProofSucceeded(proofResult);
         if (!proofResult) {
             revert Panagram__IncorrectGuess();
         }
+        lastCorrectGuessRound[msg.sender] = currentRound;
         // If this is the first correct guess, mint NFT with id 1
         if (!firstWinnerMinted) {
             firstWinnerMinted = true;
