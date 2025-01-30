@@ -5,18 +5,18 @@ import { resolve } from 'path';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
+  build: {
+    target: 'esnext',  // Set the target to 'esnext' for top-level await support
+  },
   optimizeDeps: {
-    esbuildOptions: {
-      target: 'esnext',  // Set the target to 'esnext' for top-level await support
-    },
-    include: ['buffer']
+    include: ['buffer'],
   },
   resolve: {
     alias: {
-      buffer: resolve(__dirname, 'node_modules', 'buffer')
-    }
+      buffer: resolve(__dirname, 'node_modules', 'buffer'),
+    },
   },
   css: {
     postcss: './postcss.config.js', // Path to your PostCSS config file
   },
-})
+});
