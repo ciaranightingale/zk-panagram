@@ -1,9 +1,17 @@
 import { useState, useEffect } from "react";
-import { useWriteContract, useWaitForTransactionReceipt, useAccount } from "wagmi";
+import {
+  useWriteContract,
+  useWaitForTransactionReceipt,
+  useAccount,
+} from "wagmi";
 import { abi } from "../abi/abi.ts";
 import { PANAGRAM_CONTRACT_ADDRESS } from "../constant.ts";
 import { generateProof } from "../utils/generateProof.ts";
-import { keccak256 } from "ethers";
+import { keccak256, toUtf8Bytes } from "ethers";
+
+const FIELD_MODULUS = BigInt(
+  "21888242871839275222246405745257275088548364400416034343698204186575808495617"
+);
 
 // taken from @aztec/bb.js/proof
 export function uint8ArrayToHex(buffer: Uint8Array): string {
@@ -30,7 +38,9 @@ export default function Input() {
   const [results, setResults] = useState("");
   const { address } = useAccount();
   if (!address) {
-    throw new Error("Address is undefined. Please ensure the user is connected.");
+    throw new Error(
+      "Address is undefined. Please ensure the user is connected."
+    );
   }
 
   const showLog = (content: string): void => {
@@ -43,9 +53,18 @@ export default function Input() {
     setResults("");
 
     try {
-      const guess = (document.getElementById("guess") as HTMLInputElement)
+      const guessInput = (document.getElementById("guess") as HTMLInputElement)
         .value;
-      const guessHash = await keccak256(guess);
+      // Step 1: Hash the guess string
+      const guessHex = keccak256(toUtf8Bytes(guessInput));
+
+      // Step 2: Reduce the hash mod FIELD_MODULUS
+      const reducedGuess = BigInt(guessHex) % FIELD_MODULUS;
+
+      // Step 3: Convert back to hex (32-byte padded)
+      const guessHash = "0x" + reducedGuess.toString(16).padStart(64, "0");
+
+      // Step 4: Call your proof generator with the field-safe hash
       const { proof } = await generateProof(guessHash, address, showLog);
 
       // Send transaction and get transaction hash
@@ -58,9 +77,6 @@ export default function Input() {
     } catch (error: unknown) {
       // Catch and log any other errors
       console.error(error);
-
-      // Show log that something went wrong
-      //showLog("Error submitting transaction 💔");
     }
   };
 
