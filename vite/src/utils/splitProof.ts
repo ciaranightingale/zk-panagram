@@ -26,6 +26,6 @@ export function uint8ArrayToHex(buffer: Uint8Array): string {
       hex.push(h);
     });
   
-    return "0x" + hex.join("");
+    return hex.join("");
   }
   

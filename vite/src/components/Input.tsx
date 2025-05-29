@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useWriteContract, useWaitForTransactionReceipt, useAccount } from "wagmi";
 import { abi } from "../abi/abi.ts";
-import createPedersenHash from "../utils/computeHash.ts";
 import { uint8ArrayToHex } from "../utils/splitProof.ts";
 import { PANAGRAM_CONTRACT_ADDRESS } from "../constant.ts";
 import { generateProof } from "../utils/generateProof.ts";
@@ -40,7 +39,7 @@ export default function Input() {
         address: PANAGRAM_CONTRACT_ADDRESS,
         abi: abi,
         functionName: "makeGuess",
-        args: [uint8ArrayToHex(proof)],
+        args: [`0x${uint8ArrayToHex(proof)}`],
       });
     } catch (error: unknown) {
       // Catch and log any other errors
