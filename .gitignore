@@ -11,6 +11,7 @@ circuits/target/*
 
 # dependencies
 /node_modules
+/contracts/js-scripts/node_modules
 /.pnp
 .pnp.js
 

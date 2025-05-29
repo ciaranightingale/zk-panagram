@@ -1,23 +1,18 @@
-import { UltraHonkBackend } from "@aztec/bb.js";
+import { UltraHonkBackend, } from "@aztec/bb.js";
 import circuit from "../../circuits/target/panagram.json";
 // @ts-ignore
 import { Noir } from "@noir-lang/noir_js";
 
-import initNoirC from "@noir-lang/noirc_abi";
-import initACVM from "@noir-lang/acvm_js";
-import acvm from "@noir-lang/acvm_js/web/acvm_js_bg.wasm?url";
-import noirc from "@noir-lang/noirc_abi/web/noirc_abi_wasm_bg.wasm?url";
-
 import { CompiledCircuit } from '@noir-lang/types';
 
+import { ANSWER_HASH } from "../constant";
 
-export async function GenerateProof(guess: string, showLog:(content: string) => void): Promise<{ cleanProof: Uint8Array, publicInputs: string[] }> {
+
+export async function generateProof(guess: string, address: string, showLog:(content: string) => void): Promise<{ proof: Uint8Array, publicInputs: string[] }> {
   try {
-    await Promise.all([initACVM(fetch(acvm)), initNoirC(fetch(noirc))]);
     const noir = new Noir(circuit as CompiledCircuit);
     const honk = new UltraHonkBackend(circuit.bytecode, { threads: 1 });
-      
-    const inputs = { guess: guess, expected_hash: "0x2df8b940e5890e4e1377e05373fae69a1d754f6935e6a780b666947431f2cdcd" };
+    const inputs = { guess: guess, address: address, expected_hash: ANSWER_HASH };
 
     showLog("Generating witness... ⏳");
     const { witness } = await noir.execute(inputs);
@@ -25,10 +20,15 @@ export async function GenerateProof(guess: string, showLog:(content: string) => 
 
     showLog("Generating proof... ⏳");
     const { proof, publicInputs } = await honk.generateProof(witness, { keccak: true });
+    const offChainProof = await honk.generateProof(witness);
     showLog("Generated proof... ✅");
+    showLog("Verifying proof... ⏳");
+    const isValid = await honk.verifyProof(offChainProof);
+    showLog(`Proof is valid: ${isValid} ✅`);
 
-    const cleanProof = proof.slice(4); // remove first 4 bytes (buffer size)
-    return { cleanProof, publicInputs };
+    // no longer needed for bb:)
+    // const cleanProof = proof.slice(4); // remove first 4 bytes (buffer size)
+    return { proof, publicInputs };
   } catch (error) {
     console.log(error);
     throw error;

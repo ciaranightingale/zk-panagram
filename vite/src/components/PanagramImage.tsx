@@ -1,5 +1,7 @@
+import { ANAGRAM } from "../constant";
+
 function PanagramImage() {
-  const word = "tunbrouem";
+  const word = ANAGRAM;
 
   // Scramble the word (excluding the middle letter)
   const middleIndex = Math.floor(word.length / 2); // Middle letter

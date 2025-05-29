@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useWriteContract, useWaitForTransactionReceipt } from "wagmi";
+import { useWriteContract, useWaitForTransactionReceipt, useAccount } from "wagmi";
 import { abi } from "../abi/abi.ts";
 import createPedersenHash from "../utils/computeHash.ts";
 import { uint8ArrayToHex } from "../utils/splitProof.ts";
 import { PANAGRAM_CONTRACT_ADDRESS } from "../constant.ts";
-import { GenerateProof } from "../utils/generateProof.ts";
+import { generateProof } from "../utils/generateProof.ts";
+import { keccak256 } from "ethers";
 
 export default function Input() {
   const { data: hash, isPending, writeContract, error } = useWriteContract();
@@ -14,6 +15,10 @@ export default function Input() {
     });
   const [logs, setLogs] = useState<string[]>([]);
   const [results, setResults] = useState("");
+  const { address } = useAccount();
+  if (!address) {
+    throw new Error("Address is undefined. Please ensure the user is connected.");
+  }
 
   const showLog = (content: string): void => {
     setLogs((prevLogs) => [...prevLogs, content]);
@@ -25,20 +30,16 @@ export default function Input() {
     setResults("");
 
     try {
-      const guessRaw = (document.getElementById("guess") as HTMLInputElement)
+      const guess = (document.getElementById("guess") as HTMLInputElement)
         .value;
-      const guess = await createPedersenHash([guessRaw]);
-      console.log("guess", guess);
-
-      const { cleanProof: proof } = await GenerateProof(guess, showLog);
-      console.log("proof", proof);
-      console.log("proofHex", uint8ArrayToHex(proof));
+      const guessHash = await keccak256(guess);
+      const { proof } = await generateProof(guessHash, address, showLog);
 
       // Send transaction and get transaction hash
       await writeContract({
         address: PANAGRAM_CONTRACT_ADDRESS,
         abi: abi,
-        functionName: "verifyEqual",
+        functionName: "makeGuess",
         args: [uint8ArrayToHex(proof)],
       });
     } catch (error: unknown) {
@@ -46,7 +47,7 @@ export default function Input() {
       console.error(error);
 
       // Show log that something went wrong
-      showLog("Error submitting transaction 💔");
+      //showLog("Error submitting transaction 💔");
     }
   };
 

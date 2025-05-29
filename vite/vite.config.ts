@@ -9,7 +9,8 @@ export default defineConfig({
     target: 'esnext',  // Set the target to 'esnext' for top-level await support
   },
   optimizeDeps: {
-    include: ['buffer'],
+    esbuildOptions: { target: "esnext" },
+    exclude: ['@noir-lang/noirc_abi', '@noir-lang/acvm_js']
   },
   resolve: {
     alias: {
