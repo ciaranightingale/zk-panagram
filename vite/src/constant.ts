@@ -1,3 +1,3 @@
-export const PANAGRAM_CONTRACT_ADDRESS = "0x0677dED4023054FBb90abE6deA59C2eb923AE44f"
-export const ANSWER_HASH = "0x041bb9f700cc69d9f116708368d9e267a1fc9a46dff894f88927f79f51256fff"
+export const PANAGRAM_CONTRACT_ADDRESS = "0x9946733E3164C453F0d22A70d1D8FfBc0e6cd037"
+export const ANSWER_HASH = "0x11212d1d1aad94d2dc18aed031902208221aa74484ac3e9122863fba27d5ca36" // This is bytes32(uint256(keccak256("triangles")) % FIELD_MODULUS) but obvs don't put the answer in here lol
 export const ANAGRAM = "GELTSRAIN"

@@ -1,10 +1,24 @@
 import { useState, useEffect } from "react";
 import { useWriteContract, useWaitForTransactionReceipt, useAccount } from "wagmi";
 import { abi } from "../abi/abi.ts";
-import { uint8ArrayToHex } from "../utils/splitProof.ts";
 import { PANAGRAM_CONTRACT_ADDRESS } from "../constant.ts";
 import { generateProof } from "../utils/generateProof.ts";
 import { keccak256 } from "ethers";
+
+// taken from @aztec/bb.js/proof
+export function uint8ArrayToHex(buffer: Uint8Array): string {
+  const hex: string[] = [];
+
+  buffer.forEach(function (i) {
+    let h = i.toString(16);
+    if (h.length % 2) {
+      h = "0" + h;
+    }
+    hex.push(h);
+  });
+
+  return hex.join("");
+}
 
 export default function Input() {
   const { data: hash, isPending, writeContract, error } = useWriteContract();
