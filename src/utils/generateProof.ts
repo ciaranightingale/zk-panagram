@@ -22,9 +22,9 @@ export async function generateProof(guess: string, address: string, showLog:(con
     const { proof, publicInputs } = await honk.generateProof(witness, { keccak: true });
     const offChainProof = await honk.generateProof(witness);
     showLog("Generated proof... ✅");
-    showLog("Verifying proof... ⏳");
+    showLog("Verifying proof off-chain... ⏳");
     const isValid = await honk.verifyProof(offChainProof);
-    showLog(`Proof is valid: ${isValid} ✅`);
+    showLog(`Proof is valid (off-chain): ${isValid} ✅`);
 
     // no longer needed for bb:)
     // const cleanProof = proof.slice(4); // remove first 4 bytes (buffer size)
