@@ -5,8 +5,9 @@ proofs
 broadcast
 .env
 plonk_vk.sol
-circuits/target/*
 dist
+circuits/target/vk
+circuits/target/panagram.gz
 
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
