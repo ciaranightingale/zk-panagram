@@ -54,14 +54,14 @@ export default function NFTGallery({
     address: PANAGRAM_CONTRACT_ADDRESS,
     abi,
     functionName: "balanceOf",
-    args: [owner, token_id],
+    args: [owner as `0x${string}`, BigInt(token_id)],
   });
 
   const uriResult = useReadContract({
     address: PANAGRAM_CONTRACT_ADDRESS,
     abi,
     functionName: "uri",
-    args: [token_id],
+    args: [BigInt(token_id)],
   });
 
   useEffect(() => {
