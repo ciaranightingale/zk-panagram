@@ -23,17 +23,17 @@ contract PanagramTest is Test {
         panagram = new Panagram(verifier);
 
         panagram.newRound(ANSWER);
-        proof = _getProof(CORRECT_GUESS, ANSWER);
+        proof = _getProof(CORRECT_GUESS, ANSWER, user);
     }
 
-    function _getProof(bytes32 guess, bytes32 correctAnswer) internal returns (bytes memory _proof) {
+    function _getProof(bytes32 guess, bytes32 correctAnswer, address _user) internal returns (bytes memory _proof) {
         uint256 NUM_ARGS = 6;
         string[] memory inputs = new string[](NUM_ARGS);
         inputs[0] = "npx";
         inputs[1] = "tsx";
         inputs[2] = "js-scripts/generateProof.ts";
         inputs[3] = vm.toString(guess);
-        inputs[4] = vm.toString(bytes32(uint256(uint160(user))));
+        inputs[4] = vm.toString(bytes32(uint256(uint160(_user))));
         inputs[5] = vm.toString(correctAnswer);
 
         bytes memory result = vm.ffi(inputs);
@@ -76,7 +76,7 @@ contract PanagramTest is Test {
         // make a guess call
         // validate they got the winner NFT
         // validate they have been incremented in winnerWins mapping  
-        bytes memory incorrectProof = _getProof(INCORRECT_GUESS, INCORRECT_GUESS);
+        bytes memory incorrectProof = _getProof(INCORRECT_GUESS, INCORRECT_GUESS, user);
         vm.prank(user);
         vm.expectRevert();
         panagram.makeGuess(incorrectProof);
@@ -90,10 +90,11 @@ contract PanagramTest is Test {
         vm.assertEq(panagram.balanceOf(user, 0), 1);
         vm.assertEq(panagram.balanceOf(user, 1), 0);
 
+        bytes memory proof2 = _getProof(CORRECT_GUESS, ANSWER, user2);
         vm.prank(user2);
-        panagram.makeGuess(proof);
-        vm.assertEq(panagram.s_winnerWins(user), 0);
-        vm.assertEq(panagram.balanceOf(user, 0), 0);
-        vm.assertEq(panagram.balanceOf(user, 1), 1);
+        panagram.makeGuess(proof2);
+        vm.assertEq(panagram.s_winnerWins(user2), 0);
+        vm.assertEq(panagram.balanceOf(user2, 0), 0);
+        vm.assertEq(panagram.balanceOf(user2, 1), 1);
     }
 }

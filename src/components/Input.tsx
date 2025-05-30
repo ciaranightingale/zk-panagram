@@ -37,6 +37,7 @@ export default function Input() {
   const [logs, setLogs] = useState<string[]>([]);
   const [results, setResults] = useState("");
   const { address } = useAccount();
+  
   if (!address) {
     throw new Error(
       "Address is undefined. Please ensure the user is connected."
