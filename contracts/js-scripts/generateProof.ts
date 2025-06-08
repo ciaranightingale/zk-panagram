@@ -26,14 +26,15 @@ export default async function generateProof() {
   try {
     const noir = new Noir(circuit);
     const honk = new UltraHonkBackend(circuit.bytecode, { threads: 1 });
-
+    // console.log("expect_hash", hexStringToNumberArray(inputs[2]));
+    // console.log("guess", hexStringToNumberArray(inputs[0]));
     const input = {
+      // Private inputs
+      guess: inputs[0],
+
       // Public inputs
       address: inputs[1],
-      expected_hash: inputs[2],
-
-      // Private inputs
-      guess: inputs[0]
+      expected_hash: inputs[2]
     };
     const { witness } = await noir.execute(input);
 
@@ -46,7 +47,6 @@ export default async function generateProof() {
     const isValid = await honk.verifyProof(offChainProof);
     // Restore original console.log
     console.log = originalLog;
-
     const res = ethers.AbiCoder.defaultAbiCoder().encode(
         ["bytes", "bytes32[]"],
         [proof, publicInputs]
